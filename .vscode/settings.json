@@ -1,0 +1,8 @@
+{
+    // Lets VS Code find the game code from the tests folder, so imports don't get squiggly lines.
+    "python.analysis.extraPaths": ["src"],
+
+    // Shows the tests in VS Code's Testing panel (the flask icon on the left).
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false
+}

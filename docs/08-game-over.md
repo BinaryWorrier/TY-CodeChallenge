@@ -8,40 +8,36 @@
 
 At the moment, if the snake is going right and you press left, it turns straight back into its own body. Real Snake doesn't let you do that.
 
-### Opposite
+### opposite
 
-Open `src/SnakeGame/Direction.cs` and fill in `Opposite`. It should give back the direction that points the other way. The opposite of `(1, 0)` is `(-1, 0)`.
+Open `src/direction.py` and fill in `opposite`. It should give back the direction that points the other way. The opposite of `Direction(1, 0)` is `Direction(-1, 0)`.
 
 <details>
 <summary>Hint</summary>
 
-Flip the sign of both numbers. `-Dx` is the opposite of `Dx`.
+Flip the sign of both numbers. `-self.dx` is the opposite of `self.dx`.
 </details>
 
-### Change ChangeDirection
+### Change change_direction
 
-Now open `Controls.cs`. You wrote `ChangeDirection` in Step 4. Change it so that if the new direction is the opposite of `current`, it keeps going the `current` way instead.
+Now open `src/controls.py`. You wrote `change_direction` in Step 4. Change it so that if the new direction is the opposite of `current`, it keeps going the `current` way instead.
 
 <details>
 <summary>Hint</summary>
 
 If your Step 4 code `return`s as soon as it finds the key, you'll need to change it a bit. Put the new direction in a variable first, then check it at the end:
 
-```csharp
-Direction wanted = current;
+```python
+wanted = current
 
-if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
-{
-    wanted = Direction.Up;
-}
-// ...and the other keys...
+if key == "up" or key == "w":
+    wanted = UP
+# ...and the other keys...
 
-if (wanted == current.Opposite)
-{
-    return ???;
-}
+if wanted == current.opposite():
+    return ???
 
-return wanted;
+return wanted
 ```
 </details>
 
@@ -50,27 +46,25 @@ return wanted;
 You've just changed code you wrote in Step 4. Did you break it? You don't have to guess. Run **both** sets of tests:
 
 ```
-dotnet test --filter "Step4|Step8"
+python -m pytest -k "step4 or step8"
 ```
 
 If the Step 4 tests still pass, you know your change didn't break anything. This is one of the best reasons to write tests.
 
 ## Part B: crashing into yourself
 
-Open `Snake.cs` and fill in `HitItself`. It should be `true` if the head is in the same place as any **other** part of the body.
+Open `src/snake.py` and fill in `hit_itself`. It should give back `True` if the head is in the same place as any **other** part of the body, and `False` if it isn't.
 
-The head is `Body[0]`, so check `Body[1]`, `Body[2]` and so on, up to the end of the list.
+The head is `self.body[0]`, so check `self.body[1]`, `self.body[2]` and so on, up to the end of the list.
 
 <details>
 <summary>Hint 1</summary>
 
-A `for` loop that starts at 1 instead of 0:
+A `for` loop that starts at 1 instead of 0. `range(1, len(self.body))` counts from 1 up to (but not including) the length of the snake:
 
-```csharp
-for (int i = 1; i < Body.Count; i++)
-{
-    // is Body[i] in the same place as Head?
-}
+```python
+for i in range(1, len(self.body)):
+    ...  # is self.body[i] in the same place as self.head?
 ```
 
 Why start at 1 and not 0?
@@ -79,44 +73,40 @@ Why start at 1 and not 0?
 <details>
 <summary>Hint 2</summary>
 
-As soon as you find a match, `return true;`. If the loop finishes without finding one, `return false;`.
+As soon as you find a match, `return True`. If the loop finishes without finding one, `return False`. Be careful with the indenting: the `return False` goes **after** the loop, not inside it.
 </details>
 
 ```
-dotnet test --filter Step8
+python -m pytest -k step8
 ```
 
-Have a look at the test called `Chasing_your_own_tail_is_allowed`. Why isn't that a crash?
+Have a look at the test called `test_chasing_your_own_tail_is_allowed`. Why isn't that a crash?
 
 ## Part C: game over in the game
 
-In `Program.cs`, inside the loop, after the food check:
+In `main.py`, inside the loop, after the food check:
 
-```csharp
-    // Did we crash into ourselves?
-    if (snake.HitItself())
-    {
-        playing = false;
-    }
+```python
+    # Did we crash into ourselves?
+    if snake.hit_itself():
+        playing = False
 ```
 
-And **after** the loop, replace the last two lines (`Console.CursorVisible = true;` and `Console.Clear();`) with:
+And **after** the loop, replace the last two lines (`console.show_cursor()` and `console.clear()`) with these. They're not indented, because they run after the loop has finished:
 
-```csharp
-// Game over!
-string message = $"GAME OVER - you scored {score}";
-Console.SetCursorPosition((board.Width - message.Length) / 2, board.Height / 2);
-Console.Write(message);
+```python
+# Game over!
+message = f"GAME OVER - you scored {score}"
+console.set_cursor_position((board.width - len(message)) // 2, board.height // 2)
+console.write(message)
 
-// Throw away any keys still waiting, then wait for a new key press.
-while (Console.KeyAvailable)
-{
-    Console.ReadKey(true);
-}
-Console.ReadKey(true);
+# Throw away any keys still waiting, then wait for a new key press.
+while console.key_available():
+    console.read_key()
+console.read_key()
 
-Console.CursorVisible = true;
-Console.Clear();
+console.show_cursor()
+console.clear()
 ```
 
 Run it and crash on purpose!
@@ -126,10 +116,10 @@ Run it and crash on purpose!
 You've finished, so now all the tests should pass:
 
 ```
-dotnet test
+python -m pytest
 ```
 
-Look for `Passed!` and `Failed: 0`.
+Look for `passed` in green at the bottom, and no `failed`.
 
 ## 💾 Save your work
 
@@ -145,7 +135,8 @@ You've built a whole game. Here are some ideas to make it your own. For anything
 
 - **Walls mode:** hitting the edge is game over instead of wrapping round.
 - **Speed up:** the game gets faster as the score goes up.
-- **High score:** save the best score to a file with `File.WriteAllText` and read it back with `File.ReadAllText`.
+- **High score:** save the best score to a file and read it back next time. Look up Python's `open` function.
 - **Pause:** press P to pause and unpause.
 - **Obstacles:** put some `#` blocks on the board that you mustn't hit.
-- **Two players:** one snake on the arrow keys, one on W A S D. You'll need to split `ChangeDirection` into two. Whoever crashes first loses. You are two people, after all!
+- **One-liner:** write `hit_itself` in one line, using `in` and `self.body[1:]` (that means "the list, without the first one").
+- **Two players:** one snake on the arrow keys, one on W A S D. You'll need to split `change_direction` into two. Whoever crashes first loses. You are two people, after all!

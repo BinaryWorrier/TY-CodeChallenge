@@ -2,80 +2,105 @@
 
 **Goal:** write text and colours to the screen.
 
-**You'll learn:** `Console.WriteLine`, `Console.Write`, variables, colours.
+**You'll learn:** `print`, variables, joining text together, colours.
 
-## 1. Open Program.cs
+## 1. Open main.py
 
-Open `src/SnakeGame/Program.cs`. It looks like this:
+Open `src/main.py`. It looks like this:
 
-```csharp
-// Welcome to Snake!
-// Start with the guide in docs/01-hello-console.md
+```python
+# Welcome to Snake!
+# Start with the guide in docs/01-hello-console.md
 
-// This line lets us use the game's building blocks (Position, Direction, Snake...).
-using SnakeGame;
+# These lines let us use the game's building blocks (the screen, Position, Direction, Snake...).
+# Leave them here at the top. We'll need them in later steps.
+import time
 
-Console.WriteLine("Hello, Snake!");
+import console
+from board import Board
+from controls import change_direction
+from direction import RIGHT
+from position import Position
+from snake import Snake
+
+print("Hello, Snake!")
 ```
 
-- Lines starting with `//` are **comments**. The computer ignores them. They're notes for people.
-- `Console.WriteLine("...")` writes text to the screen, then moves to a new line.
-- Every instruction ends with a semicolon `;`.
+- Lines starting with `#` are **comments**. The computer ignores them. They're notes for people.
+- `print("...")` writes text to the screen, then moves to a new line.
+- Each instruction goes on its own line. Python doesn't need a semicolon `;` at the end.
+- Capital letters matter. `print` works, but `Print` doesn't.
 
-Leave the `using SnakeGame;` line where it is. We'll need it from Step 3.
+Leave the lines that start with `import` and `from` where they are. They let `main.py` use the other files in the `src` folder.
 
 ## 2. Write some more
 
 Add these lines underneath:
 
-```csharp
-Console.WriteLine("This is a new line.");
+```python
+print("This is a new line.")
 
-Console.Write("Write ");
-Console.Write("stays ");
-Console.Write("on the same line.");
-Console.WriteLine();
+print("Print ", end="")
+print("stays ", end="")
+print("on the same line.", end="")
+print()
 ```
 
 Run it:
 
 ```
-dotnet run --project src/SnakeGame
+python src/main.py
 ```
 
-What's the difference between `Write` and `WriteLine`?
+What does `end=""` do? What does `print()` do on its own, with nothing in the brackets?
 
 ## 3. Variables
 
 A **variable** is a box with a name that holds a value. Add:
 
-```csharp
-string name = "Snakey";
-Console.WriteLine("My snake is called " + name);
+```python
+name = "Snakey"
+print("My snake is called " + name)
 
-int length = 5;
-Console.WriteLine("It is " + length + " parts long");
+length = 5
+print("It is " + str(length) + " parts long")
 ```
 
-- `string` holds text. `int` holds a whole number.
+- `name` holds text. Python calls text a **string** (`str`).
+- `length` holds a whole number. Python calls that an **int**.
+- You don't have to tell Python which kind of value goes in a variable. It works it out.
 - `+` joins text together.
+- `str(length)` turns the number 5 into the text "5".
+
+Try taking out the `str( )` so the line is `print("It is " + length + " parts long")`. Python stops with a `TypeError`. It won't join text and a number together unless you turn the number into text first. Put the `str( )` back.
 
 ## 4. Colours
 
-```csharp
-Console.ForegroundColor = ConsoleColor.Green;
-Console.WriteLine("Sssssss!");
-Console.ResetColor();
+```python
+console.set_colour("green")
+print("Sssssss!")
+console.reset_colour()
 ```
 
-Type `ConsoleColor.` and your editor will pop up a list of all the colours you can use.
+`console` is a helper file in `src/console.py`. Plain Python doesn't have an easy way to do colours that works on every computer, so we've written one for you.
+
+You can use these colours:
+
+| | | | |
+|---|---|---|---|
+| `"black"` | `"red"` | `"green"` | `"yellow"` |
+| `"blue"` | `"magenta"` | `"cyan"` | `"white"` |
+| `"grey"` | `"bright_red"` | `"bright_green"` | `"bright_yellow"` |
+| `"bright_blue"` | `"bright_magenta"` | `"bright_cyan"` | `"bright_white"` |
+
+If you spell a colour wrong, the error message lists them all.
 
 ## 🎯 Challenges
 
 Try at least two:
 
 1. Print your own name in your favourite colour.
-2. Change the **background** colour too, with `Console.BackgroundColor`.
+2. Change the **background** colour too, with `console.set_background_colour("blue")`.
 3. Draw a snake out of characters over a few lines, for example:
    ```
        ____
@@ -90,7 +115,7 @@ Try at least two:
 ## ✅ Done when
 
 - [ ] Your program prints a few lines, including at least one in colour
-- [ ] You know the difference between `Write` and `WriteLine`
+- [ ] You know what `end=""` does
 
 ## 💾 Save your work
 

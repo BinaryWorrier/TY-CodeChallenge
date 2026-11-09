@@ -1,0 +1,3 @@
+# Extra things this project needs. Install them with:
+#   python -m pip install -r requirements.txt
+pytest>=7

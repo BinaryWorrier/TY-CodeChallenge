@@ -4,21 +4,21 @@
 
 **You'll learn:** random numbers, `while` loops that search for something, checking whether a list contains something.
 
-## Part A: Grow
+## Part A: grow
 
-Open `src/SnakeGame/Snake.cs` and fill in `Grow`.
+Open `src/snake.py` and fill in `grow`.
 
-You've already done the hard work! In Step 6, `Move` grows the snake while `_growBy` is more than 0. So `Grow` only has to add `amount` onto `_growBy`.
+You've already done the hard work! In Step 6, `move` grows the snake while `self._grow_by` is more than 0. So `grow` only has to add `amount` onto `self._grow_by`.
 
 ```
-dotnet test --filter Step7
+python -m pytest -k step7
 ```
 
-The two `Growing_...` tests should pass.
+The two `test_growing_...` tests should pass.
 
 ## Part B: a random empty spot
 
-Food has to go somewhere random, but **not on top of the snake**. Open `src/SnakeGame/Board.cs` and fill in `RandomEmptySpot`.
+Food has to go somewhere random, but **not on top of the snake**. Open `src/board.py` and fill in `random_empty_spot`.
 
 The plan:
 
@@ -28,34 +28,32 @@ keep doing this:
     if the snake isn't there, that's our spot!
 ```
 
-Useful bits of C#:
+Useful bits of Python:
 
 | Code | What it does |
 |------|--------------|
-| `random.Next(10)` | a random whole number from 0 to 9 (it never gives 10) |
-| `snake.Body.Contains(spot)` | `true` if `spot` is part of the snake |
-| `!` | means "not", so `!snake.Body.Contains(spot)` means "the snake is NOT there" |
-| `while (true) { ... }` | loops forever, until you `return` |
+| `random.randrange(10)` | a random whole number from 0 to 9 (it never gives 10) |
+| `spot in snake.body` | `True` if `spot` is part of the snake |
+| `not` | means "not", so `spot not in snake.body` means "the snake is NOT there" |
+| `while True:` | loops forever, until you `return` |
+
+The `import random` line at the top of `board.py` is already there, ready for you.
 
 <details>
 <summary>Hint 1</summary>
 
-`random.Next(Width)` gives a column that is definitely on the board. Why?
+`random.randrange(self.width)` gives a column that is definitely on the board. Why?
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-```csharp
-while (true)
-{
-    Position spot = new Position(random.Next(Width), random.Next(Height));
+```python
+while True:
+    spot = Position(random.randrange(self.width), random.randrange(self.height))
 
-    if (???)
-    {
-        return spot;
-    }
-}
+    if ???:
+        return spot
 ```
 </details>
 
@@ -64,42 +62,43 @@ while (true)
 Run the tests until they're green:
 
 ```
-dotnet test --filter Step7
+python -m pytest -k step7
 ```
 
 ## Part C: food in the game
 
-Update `Program.cs`. These are the changes from Step 6:
+Update `main.py`. These are the changes from Step 6.
 
-**Before the loop**, start the snake in the middle and add the food and score:
+**Before the loop**, replace the `snake = ...`, `direction = ...` and `playing = ...` lines with these, which start the snake in the middle and add the food and the score:
 
-```csharp
-Snake snake = new Snake(new Position(board.Width / 2, board.Height / 2), startLength: 5);
-Direction direction = Direction.Right;
-Random random = new Random();
-Position food = board.RandomEmptySpot(random, snake);
-int score = 0;
-bool playing = true;
+```python
+snake = Snake(Position(board.width // 2, board.height // 2), start_length=5)
+direction = RIGHT
+food = board.random_empty_spot(snake)
+score = 0
+playing = True
 
-Draw(food, '*');
+draw(food, "*")
 ```
 
-**Inside the loop**, after drawing the snake and before `Thread.Sleep`:
+Remember `//` from Step 2? It divides and gives a whole number, because there's no such thing as column 40.5.
 
-```csharp
-    // Did we eat the food?
-    if (snake.Head == food)
-    {
-        score = score + 1;
-        snake.Grow(3);
-        food = board.RandomEmptySpot(random, snake);
-        Draw(food, '*');
-    }
+**Inside the loop**, after drawing the snake and before `time.sleep`:
 
-    // Show the score on the bottom row
-    Console.SetCursorPosition(0, board.Height);
-    Console.Write($"Score: {score}    Press Esc to quit");
+```python
+    # Did we eat the food?
+    if snake.head == food:
+        score = score + 1
+        snake.grow(3)
+        food = board.random_empty_spot(snake)
+        draw(food, "*")
+
+    # Show the score on the bottom row
+    console.set_cursor_position(0, board.height)
+    console.write(f"Score: {score}    Press Esc to quit")
 ```
+
+These lines are inside the `while` loop, so they need to be indented by 4 spaces, the same as the other lines in the loop.
 
 Remember we kept the bottom row free in Step 5? That's where the score goes.
 
@@ -107,15 +106,15 @@ Run it and eat some food!
 
 ## 🎯 Challenges
 
-1. Make the food red. (Remember `Console.ResetColor()` afterwards!)
-2. Make the game get faster as your score goes up. Hint: instead of `Thread.Sleep(100)`, use a variable for the wait time and make it smaller each time you eat.
-3. Add `Console.Beep();` when the snake eats.
+1. Make the food red. (Remember `console.reset_colour()` afterwards!)
+2. Make the game get faster as your score goes up. Hint: instead of `time.sleep(0.1)`, use a variable for the wait time and make it smaller each time you eat.
+3. Add `console.beep()` when the snake eats. (If you hear nothing, check your volume.)
 4. Sometimes put down special gold food (`$`) that's worth 5 points.
 
 ## ✅ Done when
 
 - [ ] Food appears, and when the snake eats it, it grows and the score goes up
-- [ ] `dotnet test --filter "Step3|Step4|Step5|Step6|Step7"` passes
+- [ ] `python -m pytest -k "step3 or step4 or step5 or step6 or step7"` passes
 
 ## 💾 Save your work
 

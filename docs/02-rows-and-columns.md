@@ -2,7 +2,7 @@
 
 **Goal:** write a character at any spot on the screen.
 
-**You'll learn:** how the screen is a grid, `Console.SetCursorPosition`, putting variables inside strings.
+**You'll learn:** how the screen is a grid, `console.set_cursor_position`, putting variables inside strings.
 
 ## The screen is a grid
 
@@ -22,51 +22,53 @@ row 3           .   .   .   .   .   .
 
 The **cursor** is the spot where the next character will appear. You can move it anywhere:
 
-```csharp
-Console.SetCursorPosition(10, 5);   // column 10, row 5
-Console.Write("@");
+```python
+console.set_cursor_position(10, 5)   # column 10, row 5
+console.write("@")
 ```
 
 ⚠️ **Column first, then row.** It's easy to mix these up.
 
 ## 2. Try it
 
-Replace everything under `using SnakeGame;` in `Program.cs` with:
+Replace everything under the `import` and `from` lines in `main.py` with:
 
-```csharp
-Console.Clear();
-Console.CursorVisible = false;
+```python
+console.clear()
+console.hide_cursor()
 
-// SetCursorPosition(column, row) - column FIRST, then row.
-Console.SetCursorPosition(10, 5);
-Console.Write("@");
+# set_cursor_position(column, row) - column FIRST, then row.
+console.set_cursor_position(10, 5)
+console.write("@")
 
-Console.SetCursorPosition(0, 0);
-Console.Write("Top left");
+console.set_cursor_position(0, 0)
+console.write("Top left")
 
-int width = Console.WindowWidth;
-int height = Console.WindowHeight;
+width = console.window_width()
+height = console.window_height()
 
-Console.SetCursorPosition(width - 9, 0);
-Console.Write("Top right");
+console.set_cursor_position(width - 9, 0)
+console.write("Top right")
 
-Console.SetCursorPosition(0, height - 2);
-Console.Write($"The screen is {width} columns wide and {height} rows tall.");
+console.set_cursor_position(0, height - 2)
+console.write(f"The screen is {width} columns wide and {height} rows tall.")
 
-// Wait for a key, so we can see what we drew before the program ends.
-Console.ReadKey(true);
-Console.CursorVisible = true;
-Console.Clear();
+# Wait for a key, so we can see what we drew before the program ends.
+console.read_key()
+console.show_cursor()
+console.clear()
 ```
 
 Run it. Press any key to finish.
 
 Some new things:
 
-- `Console.Clear()` wipes the screen.
-- `Console.CursorVisible = false` hides the flashing cursor.
-- `Console.WindowWidth` and `Console.WindowHeight` tell you how big the window is.
-- `$"... {width} ..."` puts a variable's value straight into a string. That's easier than lots of `+`.
+- `console.clear()` wipes the screen.
+- `console.hide_cursor()` hides the flashing cursor. `console.show_cursor()` brings it back.
+- `console.write("...")` is like `print`, but it doesn't start a new line, and the text appears straight away.
+- `console.window_width()` and `console.window_height()` tell you how big the window is.
+- `f"... {width} ..."` puts a variable's value straight into a string. The `f` at the front stands for "format". It's easier than lots of `+` and `str()`.
+- `console.read_key()` waits until you press a key.
 - Why `width - 9`? "Top right" is 9 characters long, so it has to start 9 columns from the right-hand edge.
 
 > The bottom row is `height - 1`. Writing in the very last spot on the screen can make everything scroll up, so stay off the bottom row for now.
@@ -76,8 +78,10 @@ Some new things:
 Try at least two:
 
 1. Put an `X` in the top-left, top-right and bottom-left corners. Use `height - 2` for the bottom.
-2. Write your name in the **middle** of the screen. Hint: the middle column is `width / 2`. To centre text, start at `(width - name.Length) / 2`.
-3. Draw a face using `SetCursorPosition` for each part. Remember from Step 1: type `\\` to get one `\`.
+2. Write your name in the **middle** of the screen. Hint: the middle column is `width // 2`. To centre text, start at `(width - len(name)) // 2`.
+   - `len(name)` is how many characters are in `name`.
+   - `//` divides and throws away any remainder, so you always get a whole number. If you use `/`, you might get `40.0` or `40.5`, and there's no column 40.5! The error message will remind you.
+3. Draw a face using `set_cursor_position` for each part. Remember from Step 1: type `\\` to get one `\`.
    ```
      o   o
        ^
@@ -88,7 +92,7 @@ Try at least two:
 ## ✅ Done when
 
 - [ ] You can put a character at any column and row you choose
-- [ ] You know that `SetCursorPosition` takes the **column first**
+- [ ] You know that `set_cursor_position` takes the **column first**
 
 ## 💾 Save your work
 
